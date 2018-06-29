@@ -14,7 +14,7 @@ namespace anyBaseControl
 
 
         // global data for the loaded GCODE
-        private static string[] gcodeFileData;
+        private static string[] gcodeFileData = {""};
 
         private static bool gcodeLoaded = false;
         private static Int32 gcodeParseIndex = 0;
@@ -56,6 +56,24 @@ namespace anyBaseControl
             gcodeFilePercent = 100 * gcodeParseIndex / gcodeFileData.Length;
 
             return ret;
+        }
+
+        public static void RedrawFullPicture()
+        {
+            foreach( string line in gcodeFileData)
+            {
+                GraphicsHandler.SetDrawingColor1();
+                GraphicsHandler.DrawGCodeSegment(line);
+            }
+        }
+
+        public static void RedrawCompletedPicture()
+        {
+            for(int idx = 0; idx < gcodeParseIndex; idx++)
+            { 
+                GraphicsHandler.SetDrawingColor2();
+                GraphicsHandler.DrawGCodeSegment(gcodeFileData[idx]);
+            }
         }
     }
 }

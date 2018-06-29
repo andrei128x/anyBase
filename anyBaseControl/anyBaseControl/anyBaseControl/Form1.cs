@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static anyBaseControl.ApplicationStates;
 
 namespace anyBaseControl
 {
@@ -17,14 +18,6 @@ namespace anyBaseControl
     {
 
         /* CONSTANTS */
-
-
-
-        enum TxStates
-        {
-            TX_IDLE,
-            TX_PENDING
-        }
 
         /* other INTERNAL variables */
         int count = 0;
@@ -34,11 +27,10 @@ namespace anyBaseControl
         /* relevant VARIABLES */
 
         // default COM port connection state
-        //PortStates currentPortState = PortStates.PORT_CLOSED;
-        ApplicationStates.PortStates currentPortState = ApplicationStates.PortStates.PORT_CLOSED;
+        PortStates currentPortState = PortStates.PORT_CLOSED;
 
         // transmission state
-        TxStates currentTxState = TxStates.TX_IDLE;
+        TransmitStates currentTxState = TransmitStates.TX_IDLE;
 
         // COM ports list, initially empty, but not null
         string[] portNames = { };
@@ -55,6 +47,7 @@ namespace anyBaseControl
         private void Form1_Load(object sender, EventArgs e)
         {
             ComHandler = new CommunicationHandler(textOutput);
+
         }
 
         private void btnConnect_Click(object sender, EventArgs e)
@@ -66,7 +59,7 @@ namespace anyBaseControl
             {
                 currentPortState = PortStates.PORT_OPENING;
             }
-            else if ( (currentPortState == PortStates.PORT_RUNNING_IDLE) || (currentPortState == PortStates.PORT_RUNNING_TRANSMIT) )
+            else if ((currentPortState == PortStates.PORT_RUNNING_IDLE) || (currentPortState == PortStates.PORT_RUNNING_TRANSMIT))
             {
                 currentPortState = PortStates.PORT_CLOSING;
             }
@@ -74,7 +67,7 @@ namespace anyBaseControl
 
         private void timerBkgrTasks_Tick(object sender, EventArgs e)
         {
-            // enumerate for new ports
+            // enumerate for new ports and update the list
             if (!SerialPort.GetPortNames().SequenceEqual(portNames))
             {
                 portNames = SerialPort.GetPortNames();
@@ -120,7 +113,7 @@ namespace anyBaseControl
             // error    -   return to PORT_CLOSED state
             if (currentPortState == PortStates.PORT_WAITING_GRBL_HEADER)
             {
-                currentPortState = PortStates.PORT_RUNNING_IDLE;
+                //currentPortState = PortStates.PORT_RUNNING_IDLE;
             }
 
 
@@ -131,7 +124,7 @@ namespace anyBaseControl
             // error    -   none
             if (currentPortState == PortStates.PORT_RUNNING_IDLE)
             {
-                if(GcodeHandler.GcodeLoaded)
+                if (GcodeHandler.GcodeLoaded)
                 {
                     btnStart.Enabled = true;
                     btnStop.Enabled = true;
@@ -151,7 +144,15 @@ namespace anyBaseControl
             if (currentPortState == PortStates.PORT_CLOSING)
             {
                 serialPort.DiscardInBuffer();
-                serialPort.Close();
+                try
+                {
+                    serialPort.Close();
+                }
+                catch
+                {
+                    // do nothing, port goes into state PORT_CLOSED anyway
+                    //Console.WriteLine("Error at closing port");
+                }
 
                 currentPortState = PortStates.PORT_CLOSED;
                 btnConnect.Text = "Connect";
@@ -164,23 +165,11 @@ namespace anyBaseControl
                 btnStop.Enabled = false;
             }
 
-            switch (currentPortState)
-            {
-                case PortStates.PORT_CLOSED:
-                    toolStripStatusLabel1.Text = "Disconnected";
-                    break;
-                case PortStates.PORT_OPENING:
-                    toolStripStatusLabel1.Text = "Connecting...";
-                    break;
-                case PortStates.PORT_RUNNING_IDLE:
-                    toolStripStatusLabel1.Text = "Connected";
-                    break;
-                case PortStates.PORT_CLOSING:
-                    toolStripStatusLabel1.Text = "Disconnecting...";
-                    break;
-                default:
-                    break;
-            }
+            // update graphics interface
+            GraphicsHandler.SetDrawingColor1();
+            GcodeHandler.RedrawFullPicture();
+
+            toolStripStatusLabel1.Text = currentPortState.ToString();
         }
 
         private void timerComHandler_Tick(object sender, EventArgs e)
@@ -198,25 +187,36 @@ namespace anyBaseControl
             // state    -   PORT_RUNNING
             // type     -   permanent state
             // performs -   continuosly read COM port data and request redrawing of newly incoming data
-            if ( (currentPortState == PortStates.PORT_RUNNING_IDLE) || (currentPortState == PortStates.PORT_RUNNING_TRANSMIT) )
+            if( (currentPortState == PortStates.PORT_WAITING_GRBL_HEADER)  ||
+                (currentPortState == PortStates.PORT_RUNNING_IDLE)  ||
+                (currentPortState == PortStates.PORT_RUNNING_TRANSMIT))
             {
                 byte[] localData = new byte[1024];
                 totalBytes = serialPort.BytesToRead;
                 int readBytes = totalBytes;
 
-                if(serialPort.ReadBufferSize>0)
+                if (serialPort.ReadBufferSize > 0)
                 {
                     response = serialPort.ReadExisting();
 
+                    // filter out empty responses
                     if (response != "")
                     {
                         ComHandler.ConsoleWrite(response);
 
-                        confirmationsReceived = ComHandler.ProcessIncomingData(response);
-
-                        if(confirmationsReceived>0)
+                        // if "Grbl" substring has arrived, then we definitely are connected to a GRBL machine
+                        if (response.Contains("Grbl"))
                         {
-                            currentTxState = TxStates.TX_IDLE;
+                            currentPortState = PortStates.PORT_RUNNING_IDLE;
+                        }
+                        else
+                        {   // process normal incoming data
+                            confirmationsReceived = ComHandler.ProcessIncomingData(response);
+                        }
+
+                        if (confirmationsReceived > 0)
+                        {
+                            currentTxState = TransmitStates.TX_IDLE;
                         }
 
                         //Console.Write(confirmationsReceived);
@@ -227,19 +227,22 @@ namespace anyBaseControl
                 // hadle transmission of GCODE file
                 if (currentPortState == PortStates.PORT_RUNNING_TRANSMIT)
                 {
-                    if ( (!GcodeHandler.GcodeFileDataFinished) &&(currentTxState == TxStates.TX_IDLE) )
+                    if ((!GcodeHandler.GcodeFileDataFinished) && (currentTxState == TransmitStates.TX_IDLE))
                     {
                         textOut = GcodeHandler.GetNextGcodeBlock();
                         ComHandler.ConsoleWrite(textOut);
 
                         serialPort.Write(textOut + "\r");
-                        currentTxState = TxStates.TX_PENDING;
+                        currentTxState = TransmitStates.TX_PENDING;
+                        toolStripProgressBar1.Value = GcodeHandler.GcodeFilePercent;
+                    }
+                    else if(GcodeHandler.GcodeFileDataFinished)
+                    {
+                        currentPortState = PortStates.PORT_RUNNING_IDLE;
+                        toolStripProgressBar1.Value = 100;
                     }
 
-                    // update graphics interface
-                    GraphicsHandler.DrawGCodeSegment(textOut);
-
-                    toolStripProgressBar1.Value = GcodeHandler.GcodeFilePercent;
+                    
                 }
             }
         }
@@ -254,7 +257,6 @@ namespace anyBaseControl
 
                 // load file content into the global variable
                 GcodeHandler.LoadGcodeFile(gcodeFilePath);
-
             };
         }
 
@@ -306,12 +308,14 @@ namespace anyBaseControl
         // method called when Render is requested via Invalidate
         private void glControl1_Render(object sender, OpenGL.GlControlEventArgs e)
         {
+            Control senderControl = (Control)sender;
+            Gl.Viewport(0, 0, senderControl.ClientSize.Width, senderControl.ClientSize.Height);
+            Gl.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
-            //Control senderControl = (Control)sender;
-            //Gl.Viewport(0, 0, senderControl.ClientSize.Width, senderControl.ClientSize.Height);
-            //Gl.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-
-            
+            GraphicsHandler.SetDrawingColor1();
+            GcodeHandler.RedrawFullPicture();
+            GraphicsHandler.SetDrawingColor2();
+            GcodeHandler.RedrawCompletedPicture();
         }
     }
 }

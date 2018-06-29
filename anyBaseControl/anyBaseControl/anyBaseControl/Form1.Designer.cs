@@ -59,12 +59,14 @@
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.textOutput = new System.Windows.Forms.TextBox();
             this.textInput = new System.Windows.Forms.TextBox();
+            this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.glControl1 = new OpenGL.GlControl();
             this.statusStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox4.SuspendLayout();
+            this.groupBox5.SuspendLayout();
             this.SuspendLayout();
             // 
             // timerComHandler
@@ -93,6 +95,7 @@
             // timerBkgrTasks
             // 
             this.timerBkgrTasks.Enabled = true;
+            this.timerBkgrTasks.Interval = 200;
             this.timerBkgrTasks.Tick += new System.EventHandler(this.timerBkgrTasks_Tick);
             // 
             // serialPort
@@ -112,9 +115,9 @@
             this.toolStripStatusLabel1,
             this.toolStripStatusLabel2,
             this.toolStripProgressBar1});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 492);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 749);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(873, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(794, 22);
             this.statusStrip1.TabIndex = 3;
             // 
             // toolStripStatusLabel1
@@ -122,7 +125,7 @@
             this.toolStripStatusLabel1.AutoSize = false;
             this.toolStripStatusLabel1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-            this.toolStripStatusLabel1.Size = new System.Drawing.Size(150, 17);
+            this.toolStripStatusLabel1.Size = new System.Drawing.Size(250, 17);
             this.toolStripStatusLabel1.Text = "[ connection status ]";
             // 
             // toolStripStatusLabel2
@@ -160,7 +163,7 @@
             this.groupBox1.Controls.Add(this.btnLoad);
             this.groupBox1.Location = new System.Drawing.Point(232, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(389, 48);
+            this.groupBox1.Size = new System.Drawing.Size(260, 48);
             this.groupBox1.TabIndex = 6;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "GCODE File [ none ]";
@@ -211,9 +214,9 @@
             this.groupBox3.Controls.Add(this.label5);
             this.groupBox3.Controls.Add(this.label4);
             this.groupBox3.Controls.Add(this.label3);
-            this.groupBox3.Location = new System.Drawing.Point(12, 140);
+            this.groupBox3.Location = new System.Drawing.Point(12, 66);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(609, 181);
+            this.groupBox3.Size = new System.Drawing.Size(480, 181);
             this.groupBox3.TabIndex = 8;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Control";
@@ -221,7 +224,7 @@
             // button3
             // 
             this.button3.Image = global::anyBaseControl.Properties.Resources.stop_30;
-            this.button3.Location = new System.Drawing.Point(446, 79);
+            this.button3.Location = new System.Drawing.Point(220, 79);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(46, 46);
             this.button3.TabIndex = 9;
@@ -230,7 +233,7 @@
             // button1
             // 
             this.button1.Image = global::anyBaseControl.Properties.Resources.arrowhead_down_30;
-            this.button1.Location = new System.Drawing.Point(446, 126);
+            this.button1.Location = new System.Drawing.Point(220, 126);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(46, 46);
             this.button1.TabIndex = 8;
@@ -239,7 +242,7 @@
             // button2
             // 
             this.button2.Image = global::anyBaseControl.Properties.Resources.arrowhead_up_30;
-            this.button2.Location = new System.Drawing.Point(446, 32);
+            this.button2.Location = new System.Drawing.Point(220, 32);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(46, 46);
             this.button2.TabIndex = 7;
@@ -249,7 +252,7 @@
             // btnLeft
             // 
             this.btnLeft.Image = global::anyBaseControl.Properties.Resources.arrowhead_left_30;
-            this.btnLeft.Location = new System.Drawing.Point(399, 79);
+            this.btnLeft.Location = new System.Drawing.Point(173, 79);
             this.btnLeft.Name = "btnLeft";
             this.btnLeft.Size = new System.Drawing.Size(46, 46);
             this.btnLeft.TabIndex = 6;
@@ -258,7 +261,7 @@
             // btnRight
             // 
             this.btnRight.Image = global::anyBaseControl.Properties.Resources.arrowhead_right_30;
-            this.btnRight.Location = new System.Drawing.Point(493, 79);
+            this.btnRight.Location = new System.Drawing.Point(267, 79);
             this.btnRight.Name = "btnRight";
             this.btnRight.Size = new System.Drawing.Size(46, 46);
             this.btnRight.TabIndex = 5;
@@ -267,7 +270,7 @@
             // btnDown
             // 
             this.btnDown.Image = global::anyBaseControl.Properties.Resources.arrowhead_down_30;
-            this.btnDown.Location = new System.Drawing.Point(545, 101);
+            this.btnDown.Location = new System.Drawing.Point(319, 101);
             this.btnDown.Name = "btnDown";
             this.btnDown.Size = new System.Drawing.Size(46, 71);
             this.btnDown.TabIndex = 4;
@@ -276,7 +279,7 @@
             // btnUp
             // 
             this.btnUp.Image = global::anyBaseControl.Properties.Resources.arrow_up_30;
-            this.btnUp.Location = new System.Drawing.Point(545, 27);
+            this.btnUp.Location = new System.Drawing.Point(319, 27);
             this.btnUp.Name = "btnUp";
             this.btnUp.Size = new System.Drawing.Size(46, 71);
             this.btnUp.TabIndex = 3;
@@ -316,9 +319,9 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox4.Controls.Add(this.textOutput);
             this.groupBox4.Controls.Add(this.textInput);
-            this.groupBox4.Location = new System.Drawing.Point(627, 12);
+            this.groupBox4.Location = new System.Drawing.Point(502, 12);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(242, 477);
+            this.groupBox4.Size = new System.Drawing.Size(292, 734);
             this.groupBox4.TabIndex = 9;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Console";
@@ -336,7 +339,7 @@
             this.textOutput.Name = "textOutput";
             this.textOutput.ReadOnly = true;
             this.textOutput.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textOutput.Size = new System.Drawing.Size(230, 426);
+            this.textOutput.Size = new System.Drawing.Size(280, 683);
             this.textOutput.TabIndex = 2;
             this.textOutput.TabStop = false;
             // 
@@ -347,23 +350,31 @@
             this.textInput.Enabled = false;
             this.textInput.Location = new System.Drawing.Point(6, 19);
             this.textInput.Name = "textInput";
-            this.textInput.Size = new System.Drawing.Size(230, 20);
+            this.textInput.Size = new System.Drawing.Size(280, 20);
             this.textInput.TabIndex = 1;
             this.textInput.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textInput_KeyPress);
             // 
+            // groupBox5
+            // 
+            this.groupBox5.Controls.Add(this.glControl1);
+            this.groupBox5.Location = new System.Drawing.Point(12, 253);
+            this.groupBox5.Name = "groupBox5";
+            this.groupBox5.Size = new System.Drawing.Size(480, 493);
+            this.groupBox5.TabIndex = 11;
+            this.groupBox5.TabStop = false;
+            this.groupBox5.Text = "Tool Path";
+            // 
             // glControl1
             // 
-            this.glControl1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
             this.glControl1.BackColor = System.Drawing.SystemColors.Control;
             this.glControl1.ColorBits = ((uint)(24u));
             this.glControl1.DepthBits = ((uint)(0u));
-            this.glControl1.Location = new System.Drawing.Point(12, 327);
+            this.glControl1.Location = new System.Drawing.Point(6, 19);
             this.glControl1.MultisampleBits = ((uint)(0u));
             this.glControl1.Name = "glControl1";
-            this.glControl1.Size = new System.Drawing.Size(609, 156);
+            this.glControl1.Size = new System.Drawing.Size(468, 468);
             this.glControl1.StencilBits = ((uint)(0u));
-            this.glControl1.TabIndex = 10;
+            this.glControl1.TabIndex = 0;
             this.glControl1.ContextCreated += new System.EventHandler<OpenGL.GlControlEventArgs>(this.glControl1_ContextCreated);
             this.glControl1.Render += new System.EventHandler<OpenGL.GlControlEventArgs>(this.glControl1_Render);
             // 
@@ -372,8 +383,8 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
-            this.ClientSize = new System.Drawing.Size(873, 514);
-            this.Controls.Add(this.glControl1);
+            this.ClientSize = new System.Drawing.Size(794, 771);
+            this.Controls.Add(this.groupBox5);
             this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
@@ -392,6 +403,7 @@
             this.groupBox3.PerformLayout();
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();
+            this.groupBox5.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -428,6 +440,7 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.GroupBox groupBox5;
         private OpenGL.GlControl glControl1;
     }
 }

@@ -20,26 +20,26 @@ namespace anyBaseControl
             Gl.Ortho(0.0, 1.0f, 0.0, 1.0, 0.0, 1.0);
 
             Gl.MatrixMode(MatrixMode.Modelview);
-            Gl.LoadIdentity();
-
+            //Gl.LoadIdentity();
             Gl.Enable(EnableCap.Blend);
+            Gl.BlendFunc( (OpenGL.BlendingFactor)Gl.SRC_ALPHA, (OpenGL.BlendingFactor)Gl.ONE_MINUS_SRC_ALPHA);
             Gl.Enable(EnableCap.LineSmooth);
-            Gl.Enable(EnableCap.PolygonSmooth);
-            Gl.Hint(HintTarget.LineSmoothHint, HintMode.Nicest);
-            Gl.Hint(HintTarget.PolygonSmoothHint, HintMode.Nicest);
+            //Gl.Enable(EnableCap.PolygonSmooth);
+            //Gl.Hint(HintTarget.LineSmoothHint, HintMode.Nicest);
+            //Gl.Hint(HintTarget.PolygonSmoothHint, HintMode.Nicest);
 
-            Gl.LineWidth(.05f);
-            Gl.PointSize(.07f);
+            Gl.LineWidth(.2f);
+            //Gl.PointSize(.07f);
 
             //Gl.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
 
-            Gl.ClearColor(.17f, .13f, .25f, .5f);
+            //Gl.ClearColor(.17f, .13f, .25f, .5f);
+            Gl.ClearColor(1.0f, 1.0f, 1.0f, .5f);
         }
 
         // method for drawing a line segment from the DataBuffer
         public static void LineSegment(float x1, float y1, float x2, float y2)
         {
-            Gl.Color3(.79f, .19f, .39f);
             Gl.Begin(PrimitiveType.LineStrip);
             Gl.Vertex2(x1,y1);
             Gl.Vertex2(x2,y2);
@@ -73,9 +73,30 @@ namespace anyBaseControl
                 m = m.NextMatch();
             }
 
-            LineSegment(oldX/40, oldY/40, currentX/40, currentY/40);
+            if (command.StartsWith("G01"))
+            {
+                //SetDrawingColor1();
+            }
+
+            if (command.StartsWith("G00"))
+            {
+                SetDrawingColor1();
+            }
+
+            LineSegment(oldX / 40, oldY / 40, currentX / 40, currentY / 40);
+
             oldX = currentX;
             oldY = currentY;
+        }
+
+        public static void SetDrawingColor1()
+        {
+            Gl.Color3(.8f, .8f, .8f);
+        }
+
+        public static void SetDrawingColor2()
+        {
+            Gl.Color3(1.0f, 0.1f, .1f);
         }
     }
 }

@@ -30,6 +30,8 @@ namespace anyBaseControl
         {
             int ret = 0;
 
+            IncomingData += text;
+
             // clean string and replace every pair of "\r\n" with a simple "\r\n"
             string cleanData = text.Replace("\r\n", "\r");
 
@@ -55,7 +57,7 @@ namespace anyBaseControl
 
         public bool ConfirmationReceived()
         {
-            if
+            return true;
         }
     }
 }
