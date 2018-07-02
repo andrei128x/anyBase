@@ -234,7 +234,7 @@ namespace anyBaseControl
                     if ((!GcodeHandler.GcodeFileDataFinished) && (currentTxState == TransmitStates.TX_IDLE))
                     {
                         textOut = GcodeHandler.GetNextGcodeBlock();
-                        ComHandler.ConsoleWrite(textOut);
+                        ComHandler.ConsoleWrite(textOut + '\t');
 
                         serialPort.Write(textOut + "\r");
                         currentTxState = TransmitStates.TX_PENDING;
@@ -269,7 +269,8 @@ namespace anyBaseControl
         {
             if (e.KeyChar == (char)Keys.Return)
             {
-                textOutput.Text += textInput.Text + (char)Keys.Return + (char)Keys.LineFeed;
+                //textOutput.Text += textInput.Text + (char)Keys.Return + (char)Keys.LineFeed;
+                ComHandler.ConsoleWrite(textInput.Text + '\t');
 
                 // line ending information found at : https://github.com/grbl/grbl/wiki/Using-Grbl
                 serialPort.Write(textInput.Text + (char)Keys.Return);
