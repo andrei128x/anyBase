@@ -28,13 +28,13 @@ namespace anyBaseControl
             //Gl.Hint(HintTarget.LineSmoothHint, HintMode.Nicest);
             //Gl.Hint(HintTarget.PolygonSmoothHint, HintMode.Nicest);
 
-            Gl.LineWidth(.2f);
+            Gl.LineWidth(.8f);
             //Gl.PointSize(.07f);
 
             //Gl.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
 
             //Gl.ClearColor(.17f, .13f, .25f, .5f);
-            Gl.ClearColor(1.0f, 1.0f, 1.0f, .5f);
+            Gl.ClearColor(1.0f, 1.0f, 1.0f, .6f);
         }
 
         // method for drawing a line segment from the DataBuffer
@@ -58,7 +58,7 @@ namespace anyBaseControl
             Match m = Regex.Match(command, coords);
             while (m.Success)
             {
-                System.Console.WriteLine("'{0}' found at position {1}", m.Value, m.Index);
+                // System.Console.WriteLine("'{0}' found at position {1}", m.Value, m.Index);
                 string parseStr = m.Value.ToString();
                 if (parseStr.Contains("X") || parseStr.Contains("x"))
                 {
@@ -91,7 +91,7 @@ namespace anyBaseControl
 
         public static void SetDrawingColor1()
         {
-            Gl.Color3(.8f, .8f, .8f);
+            Gl.Color3(.7f, .7f, .7f);
         }
 
         public static void SetDrawingColor2()
