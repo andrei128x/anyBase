@@ -170,6 +170,8 @@ namespace anyBaseControl
             GcodeHandler.RedrawFullPicture();
 
             toolStripStatusLabel1.Text = currentPortState.ToString();
+
+            glControl1.Invalidate();
         }
 
         private void timerComHandler_Tick(object sender, EventArgs e)
@@ -187,42 +189,44 @@ namespace anyBaseControl
             // state    -   PORT_RUNNING
             // type     -   permanent state
             // performs -   continuosly read COM port data and request redrawing of newly incoming data
-            if( (currentPortState == PortStates.PORT_WAITING_GRBL_HEADER)  ||
-                (currentPortState == PortStates.PORT_RUNNING_IDLE)  ||
+            if ((currentPortState == PortStates.PORT_WAITING_GRBL_HEADER) ||
+                (currentPortState == PortStates.PORT_RUNNING_IDLE) ||
                 (currentPortState == PortStates.PORT_RUNNING_TRANSMIT))
             {
                 byte[] localData = new byte[1024];
                 totalBytes = serialPort.BytesToRead;
                 int readBytes = totalBytes;
 
-                if (serialPort.ReadBufferSize > 0)
+                //if (serialPort.ReadBufferSize > 0)
+                //{
+                response = serialPort.ReadExisting();
+
+                // filter out empty responses
+
+                if (response != "")
                 {
-                    response = serialPort.ReadExisting();
-
-                    // filter out empty responses
-                    if (response != "")
-                    {
-                        ComHandler.ConsoleWrite(response);
-
-                        // if "Grbl" substring has arrived, then we definitely are connected to a GRBL machine
-                        if (response.Contains("Grbl"))
-                        {
-                            currentPortState = PortStates.PORT_RUNNING_IDLE;
-                        }
-                        else
-                        {   // process normal incoming data
-                            confirmationsReceived = ComHandler.ProcessIncomingData(response);
-                        }
-
-                        if (confirmationsReceived > 0)
-                        {
-                            currentTxState = TransmitStates.TX_IDLE;
-                        }
-
-                        //Console.Write(confirmationsReceived);
-                        glControl1.Invalidate();
-                    }
+                    ComHandler.ConsoleWrite(response);
                 }
+
+                // if "Grbl" substring has arrived, then we definitely are connected to a GRBL machine
+                if (response.Contains("Grbl"))
+                {
+                    currentPortState = PortStates.PORT_RUNNING_IDLE;
+                }
+                else
+                {   // process normal incoming data
+                    confirmationsReceived = ComHandler.ProcessIncomingData(response);
+                }
+
+                if (confirmationsReceived > 0)
+                {
+                    currentTxState = TransmitStates.TX_IDLE;
+                }
+
+                //Console.Write(confirmationsReceived);
+                //glControl1.Invalidate();
+
+                //}
 
                 // hadle transmission of GCODE file
                 if (currentPortState == PortStates.PORT_RUNNING_TRANSMIT)
@@ -236,13 +240,13 @@ namespace anyBaseControl
                         currentTxState = TransmitStates.TX_PENDING;
                         toolStripProgressBar1.Value = GcodeHandler.GcodeFilePercent;
                     }
-                    else if(GcodeHandler.GcodeFileDataFinished)
+                    else if (GcodeHandler.GcodeFileDataFinished)
                     {
                         currentPortState = PortStates.PORT_RUNNING_IDLE;
                         toolStripProgressBar1.Value = 100;
                     }
 
-                    
+
                 }
             }
         }
@@ -258,6 +262,7 @@ namespace anyBaseControl
                 // load file content into the global variable
                 GcodeHandler.LoadGcodeFile(gcodeFilePath);
             };
+            glControl1.Invalidate();
         }
 
         private void textInput_KeyPress(object sender, KeyPressEventArgs e)
@@ -316,6 +321,16 @@ namespace anyBaseControl
             GcodeHandler.RedrawFullPicture();
             GraphicsHandler.SetDrawingColor2();
             GcodeHandler.RedrawCompletedPicture();
+        }
+
+        private void glControl1_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void statusStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+
         }
     }
 }

@@ -71,7 +71,7 @@
             // 
             // timerComHandler
             // 
-            this.timerComHandler.Interval = 1;
+            this.timerComHandler.Interval = 10;
             this.timerComHandler.Tick += new System.EventHandler(this.timerComHandler_Tick);
             // 
             // comboBox1
@@ -115,10 +115,11 @@
             this.toolStripStatusLabel1,
             this.toolStripStatusLabel2,
             this.toolStripProgressBar1});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 749);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 522);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(794, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(808, 22);
             this.statusStrip1.TabIndex = 3;
+            this.statusStrip1.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.statusStrip1_ItemClicked);
             // 
             // toolStripStatusLabel1
             // 
@@ -163,7 +164,7 @@
             this.groupBox1.Controls.Add(this.btnLoad);
             this.groupBox1.Location = new System.Drawing.Point(232, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(260, 48);
+            this.groupBox1.Size = new System.Drawing.Size(564, 48);
             this.groupBox1.TabIndex = 6;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "GCODE File [ none ]";
@@ -220,6 +221,7 @@
             this.groupBox3.TabIndex = 8;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Control";
+            this.groupBox3.Visible = false;
             // 
             // button3
             // 
@@ -319,9 +321,9 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox4.Controls.Add(this.textOutput);
             this.groupBox4.Controls.Add(this.textInput);
-            this.groupBox4.Location = new System.Drawing.Point(502, 12);
+            this.groupBox4.Location = new System.Drawing.Point(516, 66);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(292, 734);
+            this.groupBox4.Size = new System.Drawing.Size(280, 453);
             this.groupBox4.TabIndex = 9;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Console";
@@ -334,12 +336,12 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textOutput.Location = new System.Drawing.Point(6, 45);
-            this.textOutput.MaxLength = 10000000;
+            this.textOutput.MaxLength = 10000;
             this.textOutput.Multiline = true;
             this.textOutput.Name = "textOutput";
             this.textOutput.ReadOnly = true;
             this.textOutput.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textOutput.Size = new System.Drawing.Size(280, 683);
+            this.textOutput.Size = new System.Drawing.Size(268, 402);
             this.textOutput.TabIndex = 2;
             this.textOutput.TabStop = false;
             // 
@@ -350,16 +352,16 @@
             this.textInput.Enabled = false;
             this.textInput.Location = new System.Drawing.Point(6, 19);
             this.textInput.Name = "textInput";
-            this.textInput.Size = new System.Drawing.Size(280, 20);
+            this.textInput.Size = new System.Drawing.Size(268, 20);
             this.textInput.TabIndex = 1;
             this.textInput.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textInput_KeyPress);
             // 
             // groupBox5
             // 
             this.groupBox5.Controls.Add(this.glControl1);
-            this.groupBox5.Location = new System.Drawing.Point(12, 253);
+            this.groupBox5.Location = new System.Drawing.Point(12, 85);
             this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(480, 493);
+            this.groupBox5.Size = new System.Drawing.Size(498, 434);
             this.groupBox5.TabIndex = 11;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "Tool Path";
@@ -372,18 +374,19 @@
             this.glControl1.Location = new System.Drawing.Point(6, 19);
             this.glControl1.MultisampleBits = ((uint)(0u));
             this.glControl1.Name = "glControl1";
-            this.glControl1.Size = new System.Drawing.Size(468, 468);
+            this.glControl1.Size = new System.Drawing.Size(486, 405);
             this.glControl1.StencilBits = ((uint)(0u));
             this.glControl1.TabIndex = 0;
             this.glControl1.ContextCreated += new System.EventHandler<OpenGL.GlControlEventArgs>(this.glControl1_ContextCreated);
             this.glControl1.Render += new System.EventHandler<OpenGL.GlControlEventArgs>(this.glControl1_Render);
+            this.glControl1.Load += new System.EventHandler(this.glControl1_Load);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
-            this.ClientSize = new System.Drawing.Size(794, 771);
+            this.ClientSize = new System.Drawing.Size(808, 544);
             this.Controls.Add(this.groupBox5);
             this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox3);
